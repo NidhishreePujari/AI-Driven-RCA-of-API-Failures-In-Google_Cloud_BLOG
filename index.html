@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Root Cause Analysis of API Failures in Google Cloud</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --text-color: #202124;
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --border-color: #dadce0;
+            --accent-color: #ea4335;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .meta-info {
+            font-size: 0.9rem;
+            color: #5f6368;
+            margin-bottom: 10px;
+        }
+
+        .author-box {
+            background-color: var(--card-bg);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .author-box p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #111;
+            line-height: 1.2;
+            margin: 10px 0;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #5f6368;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #111;
+            margin-top: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        blockquote {
+            background-color: #e8f0fe;
+            border-left: 4px solid var(--primary-color);
+            margin: 30px 0;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .equation {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 25px 0;
+            overflow-x: auto;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .references {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .references h2 {
+            margin-top: 0;
+        }
+
+        .reference-item {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .reference-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .reference-item a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #5f6368;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="meta-info">Academic Year 2025-2026 | ISE Activity: Blog Writing</div>
+            <h1>AI-Driven Root Cause Analysis of API Failures in Google Cloud</h1>
+            <div class="subtitle">"APIs Don't Fail Quietly Anymore"</div>
+        </header>
+
+        <div class="author-box">
+            <p><strong>Prepared by:</strong> Nidhishree Prabhakar Pujari (Roll No: 3004, Class: TY A)</p>
+            <p><strong>URN:</strong> 23031009</p>
+            <p><strong>Under Guidance of:</strong> Prof. S. D. Khatavkar</p>
+            <p><strong>Institution:</strong> Annasaheb Dange College of Engineering and Technology, Ashta</p>
+        </div>
+
+        <article>
+            <p>Think about the last time an app just stopped working. Maybe a payment got charged twice, or a dashboard froze halfway through loading. From your side, it's a frustrating glitch. From the engineering team's side, it's a fire. Phones start ringing, someone gets pulled out of a meeting, and before anything gets fixed, everyone has to answer one deceptively simple question i.e., what actually went wrong?</p>
+
+            <p>In a Google Cloud environment, that question has become genuinely difficult. Modern applications aren't neat programs running on a single server—they're spreading networks of services where one small hiccup can quietly cause chaos across four others before anyone notices.</p>
+
+            <p>It wasn't always this way. Ten or fifteen years ago, a broken API meant you checked the log, found the error, and fixed it before lunch. The whole system fit inside one engineer's head. Today, a single request might pass through an auth service, a rate limiter, a cache, multiple backend microservices, a database, and a third-party API before returning a response. When something breaks anywhere along that chain, the place where the error appears and the place where it started are often nowhere near each other.</p>
+
+            <blockquote>
+                "The thing that actually matters is explaining why something broke, not just that it did."
+            </blockquote>
+
+            <p>Monitoring has always been in the business of spotting coincidences. It notices that two things happened around the same time and flags them. What it has never done well is figuring out which one caused the other. API errors spike. Database latency spikes at the same moment. Is the database dragging the API down? Are both overwhelmed by a traffic surge? Did a config change upstream quietly knock both sideways?</p>
+
+            <p>Without those answers, you're not really debugging—you're guessing with extra steps. That's the gap AI-driven root cause analysis (RCA) is designed to close. Not by layering more alerts on top of existing ones, but by actually modeling cause-and-effect relationships between services.</p>
+
+            <h2>The Mathematics Behind the AI</h2>
+            <p>AI-driven root cause analysis uses probabilistic reasoning to model cause-effect relationships between system events. Instead of just observing correlations, it evaluates the likelihood of one event given another using Bayesian inference:</p>
+
+            <div class="equation">
+                $$P(A|B)=\frac{P(B|A)\cdot P(A)}{P(B)}$$
+            </div>
+
+            <p>Here, API failures can be analyzed based on events like database latency. To capture how failures evolve over time, techniques such as Granger causality are used:</p>
+
+            <div class="equation">
+                $$Y_{t}=\sum_{i=1}^{p}a_{i}Y_{t-i}+\sum_{i=1}^{p}b_{i}X_{t-i}+\epsilon_{t}$$
+            </div>
+
+            <p>This allows the system to move beyond correlation and identify the true root cause. It pulls from Cloud Logging, Cloud Monitoring, Cloud Trace, deployment histories, and config changes, stitches it all into a coherent picture, and traces the failure backward to wherever it truly started, in language engineers can actually follow.</p>
+
+            <h2>From Symptoms to Solutions</h2>
+            <p>When it works, the difference is striking. A developer pushes what looks like a harmless config change on a Thursday afternoon—just a timeout adjustment on a database connection pool. Nothing breaks immediately. But over the next twenty minutes, database queries slow down, APIs start stacking up response times, and clients begin hitting errors. By the time an alert fires, five dashboards are red and the on-call engineer is staring at a wall of problems.</p>
+
+            <p>An AI-driven system, working through the same data, has already traced the sequence: config change first, database slowdown second, API failures third, client errors last. One root cause, four symptoms with timestamps, service paths, and the specific value that changed all laid out clearly. Some systems will even suggest the fix. The engineer doesn't have to follow it blindly, but they're not starting from zero either.</p>
+
+            <p>The effectiveness of AI-driven root cause analysis is evaluated using practical metrics such as Mean Time to Resolution (MTTR), precision of root cause detection, and reduction in false alerts. These models are trained on historical incident data from logs, metrics, and traces, with preprocessing steps like noise filtering and normalization. Continuous tuning using feedback from past incidents helps improve accuracy and ensures the system adapts to changing system behavior.</p>
+
+            <h2>The Practical Impact</h2>
+            <p>The practical impact during a real incident is hard to overstate. There's a particular exhaustion that comes from spending forty-five minutes chasing wrong answers while production is still down and real users are still affected. Cutting that window from an hour to five minutes doesn't just save time—it limits the blast radius, keeps the engineer mentally sharp for the actual fix, and gives junior team members a real chance to contribute.</p>
+
+            <p>That said, AI-driven analysis is only as good as the data behind it. A service that quietly stopped emitting logs months ago is invisible to the model, and a confidently wrong conclusion can send a team chasing the wrong problem entirely—which costs more time than no answer at all.</p>
+
+            <h2>Where Do We Go From Here?</h2>
+            <p>Where this is all heading is toward systems that don't just diagnose failures but resolve them—rolling back deploys, rerouting traffic, restarting services without anyone needing to approve it at 3 a.m. Early versions of this already exist in production at some large organizations. It won't handle complex, genuinely novel failures—those still need experienced engineers. But the recurring ones, the failures every senior engineer has fixed three or four times already, should not require a human out of bed in the middle of the night.</p>
+
+            <p>The goal was never to remove engineers from the picture. It was to stop wasting their time on things that don't need them. API failures are a structural feature of how modern software is built. But the part where figuring out what happened takes longer than fixing it? That's a choice—and one worth changing.</p>
+        </article>
+
+        <section class="references">
+            <h2>References</h2>
+            
+            <div class="reference-item">
+                <strong>[1] Zhou, L. et al. (2026)</strong> - 
+                <em>"RC-LLM: Root Cause Analysis Using Large Language Models"</em>. 
+                Introduces LLM-based reasoning across logs, metrics, and traces to accurately identify root causes in complex cloud systems. 
+                <br><a href="https://arxiv.org/abs/2602.08804" target="_blank">https://arxiv.org/abs/2602.08804</a>
+            </div>
+
+            <div class="reference-item">
+                <strong>[2] Liang, S. et al. (2026)</strong> - 
+                <em>"MetaRCA: A Generalizable Root Cause Analysis Framework for Cloud-Native Systems"</em>. 
+                Presents a scalable RCA framework using causal graphs and reusable knowledge across microservices environments. 
+                <br><a href="https://arxiv.org/abs/2603.02032" target="_blank">https://arxiv.org/abs/2603.02032</a>
+            </div>
+
+            <div class="reference-item">
+                <strong>[3] Google Cloud (2025)</strong> - 
+                <em>"Gemini Cloud Assist: AI-Powered Root Cause Analysis"</em>. 
+                Explains how Google Cloud uses AI to analyze logs, metrics, and configurations to automatically detect and explain root causes of failures. 
+                <br><a href="https://cloud.google.com/blog/products/management-tools/gemini-cloud-assist-investigations-performs-root-cause-analysis" target="_blank">Google Cloud Blog Link</a>
+            </div>
+
+            <div class="reference-item">
+                <strong>[4] Google Cloud (2025)</strong> - 
+                <em>"What is AIOps?"</em> 
+                Describes how AI correlates logs, metrics, and traces to identify cause-effect relationships and perform intelligent root cause analysis. 
+                <br><a href="https://cloud.google.com/discover/what-is-aiops" target="_blank">https://cloud.google.com/discover/what-is-aiops</a>
+            </div>
+
+            <div class="reference-item">
+                <strong>[5] Chen, S. et al. (2025)</strong> - 
+                <em>"Causal Inference-Based Root Cause Analysis Using Multi-Modal Data"</em>. 
+                Explores combining logs, metrics, and configuration data to identify true causes of failures in distributed systems. 
+                <br><a href="https://www.sciencedirect.com/science/article/pii/S0951832025007203" target="_blank">ScienceDirect Link</a>
+            </div>
+            
+            <div class="reference-item">
+                <strong>[6] Korf, N.</strong> - 
+                <em>"Grangersearch Example Dataset"</em>. 
+                <br><a href="https://github.com/nkorf/grangersearch" target="_blank">https://github.com/nkorf/grangersearch</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2026 Annasaheb Dange College of Engineering and Technology. All rights reserved.
+    </footer>
+
+</body>
+</html>
