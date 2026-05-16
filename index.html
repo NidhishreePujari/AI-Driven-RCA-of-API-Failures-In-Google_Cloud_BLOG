@@ -91,12 +91,13 @@
 
         .equation {
             background-color: var(--card-bg);
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             margin: 25px 0;
             overflow-x: auto;
             text-align: center;
             border: 1px solid var(--border-color);
+            font-size: 1.25rem;
         }
 
         .references {
@@ -128,13 +129,26 @@
             text-align: center;
             padding: 40px 0;
             color: #5f6368;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             border-top: 1px solid var(--border-color);
             margin-top: 60px;
+            font-weight: 500;
         }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -153,9 +167,9 @@
         </div>
 
         <article>
-            <p>Think about the last time an app just stopped working. Maybe a payment got charged twice, or a dashboard froze halfway through loading. From your side, it's a frustrating glitch. From the engineering team's side, it's a fire. Phones start ringing, someone gets pulled out of a meeting, and before anything gets fixed, everyone has to answer one deceptively simple question i.e., what actually went wrong?</p>
+            <p>Think about the last time an app just stopped working. Maybe a payment got charged twice, or a dashboard froze halfway through loading. From your side, it's a frustrating glitch. From the engineering team's side, it's a fire. Phones start ringing, someone gets pulled out of a meeting, and before anything gets fixed, everyone has to answer one deceptively simple question i.e. what actually went wrong?</p>
 
-            <p>In a Google Cloud environment, that question has become genuinely difficult. Modern applications aren't neat programs running on a single server—they're spreading networks of services where one small hiccup can quietly cause chaos across four others before anyone notices.</p>
+            <p>In a Google Cloud environment, that question has become genuinely difficult. Modern applications aren't neat programs running on a single server they're spreading networks of services where one small hiccup can quietly cause chaos across four others before anyone notices.</p>
 
             <p>It wasn't always this way. Ten or fifteen years ago, a broken API meant you checked the log, found the error, and fixed it before lunch. The whole system fit inside one engineer's head. Today, a single request might pass through an auth service, a rate limiter, a cache, multiple backend microservices, a database, and a third-party API before returning a response. When something breaks anywhere along that chain, the place where the error appears and the place where it started are often nowhere near each other.</p>
 
@@ -165,39 +179,39 @@
 
             <p>Monitoring has always been in the business of spotting coincidences. It notices that two things happened around the same time and flags them. What it has never done well is figuring out which one caused the other. API errors spike. Database latency spikes at the same moment. Is the database dragging the API down? Are both overwhelmed by a traffic surge? Did a config change upstream quietly knock both sideways?</p>
 
-            <p>Without those answers, you're not really debugging—you're guessing with extra steps. That's the gap AI-driven root cause analysis (RCA) is designed to close. Not by layering more alerts on top of existing ones, but by actually modeling cause-and-effect relationships between services.</p>
+            <p>Without those answers, you're not really debugging you're guessing with extra steps. That's the gap AI-driven root cause analysis is designed to close. Not by layering more alerts on top of existing ones, but by actually modeling cause-and-effect relationships between services.</p>
 
             <h2>The Mathematics Behind the AI</h2>
-            <p>AI-driven root cause analysis uses probabilistic reasoning to model cause-effect relationships between system events. Instead of just observing correlations, it evaluates the likelihood of one event given another using Bayesian inference:</p>
+            <p>AI-driven root cause analysis uses probabilistic reasoning to model cause-effect relationships between system events. Instead of just observing correlations, it evaluates the likelihood of one event given another:</p>
 
             <div class="equation">
-                $$P(A|B)=\frac{P(B|A)\cdot P(A)}{P(B)}$$
+                $$P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$$
             </div>
 
             <p>Here, API failures can be analyzed based on events like database latency. To capture how failures evolve over time, techniques such as Granger causality are used:</p>
 
             <div class="equation">
-                $$Y_{t}=\sum_{i=1}^{p}a_{i}Y_{t-i}+\sum_{i=1}^{p}b_{i}X_{t-i}+\epsilon_{t}$$
+                $$Y_{t} = \sum_{i=1}^{p}a_{i}Y_{t-i} + \sum_{i=1}^{p}b_{i}X_{t-i} + \epsilon_{t}$$
             </div>
 
-            <p>This allows the system to move beyond correlation and identify the true root cause. It pulls from Cloud Logging, Cloud Monitoring, Cloud Trace, deployment histories, and config changes, stitches it all into a coherent picture, and traces the failure backward to wherever it truly started, in language engineers can actually follow.</p>
+            <p>This allows the system to move beyond correlation and identify the true root cause. It pulls from Cloud Logging, Cloud Monitoring, Cloud Trace, deployment histories, and config changes stitches it all into a coherent picture and traces the failure backward to wherever it truly started, in language engineers can actually follow.</p>
 
             <h2>From Symptoms to Solutions</h2>
-            <p>When it works, the difference is striking. A developer pushes what looks like a harmless config change on a Thursday afternoon—just a timeout adjustment on a database connection pool. Nothing breaks immediately. But over the next twenty minutes, database queries slow down, APIs start stacking up response times, and clients begin hitting errors. By the time an alert fires, five dashboards are red and the on-call engineer is staring at a wall of problems.</p>
+            <p>When it works, the difference is striking. A developer pushes what looks like a harmless config change on a Thursday afternoon just a timeout adjustment on a database connection pool. Nothing breaks immediately. But over the next twenty minutes, database queries slow down, APIs start stacking up response times, and clients begin hitting errors. By the time an alert fires, five dashboards are red and the on-call engineer is staring at a wall of problems.</p>
 
             <p>An AI-driven system, working through the same data, has already traced the sequence: config change first, database slowdown second, API failures third, client errors last. One root cause, four symptoms with timestamps, service paths, and the specific value that changed all laid out clearly. Some systems will even suggest the fix. The engineer doesn't have to follow it blindly, but they're not starting from zero either.</p>
 
             <p>The effectiveness of AI-driven root cause analysis is evaluated using practical metrics such as Mean Time to Resolution (MTTR), precision of root cause detection, and reduction in false alerts. These models are trained on historical incident data from logs, metrics, and traces, with preprocessing steps like noise filtering and normalization. Continuous tuning using feedback from past incidents helps improve accuracy and ensures the system adapts to changing system behavior.</p>
 
             <h2>The Practical Impact</h2>
-            <p>The practical impact during a real incident is hard to overstate. There's a particular exhaustion that comes from spending forty-five minutes chasing wrong answers while production is still down and real users are still affected. Cutting that window from an hour to five minutes doesn't just save time—it limits the blast radius, keeps the engineer mentally sharp for the actual fix, and gives junior team members a real chance to contribute.</p>
+            <p>The practical impact during a real incident is hard to overstate. There's a particular exhaustion that comes from spending forty-five minutes chasing wrong answers while production is still down and real users are still affected. Cutting that window from an hour to five minutes doesn't just save time it limits the blast radius, keeps the engineer mentally sharp for the actual fix, and gives junior team members a real chance to contribute.</p>
 
-            <p>That said, AI-driven analysis is only as good as the data behind it. A service that quietly stopped emitting logs months ago is invisible to the model, and a confidently wrong conclusion can send a team chasing the wrong problem entirely—which costs more time than no answer at all.</p>
+            <p>That said, AI-driven analysis is only as good as the data behind it. A service that quietly stopped emitting logs months ago is invisible to the model, and a confidently wrong conclusion can send a team chasing the wrong problem entirely which costs more time than no answer at all.</p>
 
             <h2>Where Do We Go From Here?</h2>
-            <p>Where this is all heading is toward systems that don't just diagnose failures but resolve them—rolling back deploys, rerouting traffic, restarting services without anyone needing to approve it at 3 a.m. Early versions of this already exist in production at some large organizations. It won't handle complex, genuinely novel failures—those still need experienced engineers. But the recurring ones, the failures every senior engineer has fixed three or four times already, should not require a human out of bed in the middle of the night.</p>
+            <p>Where this is all heading is toward systems that don't just diagnose failures but resolve them rolling back deploys, rerouting traffic, restarting services without anyone needing to approve it at 3 a.m. Early versions of this already exist in production at some large organizations. It won't handle complex, genuinely novel failures those still need experienced engineers. But the recurring ones, the failures every senior engineer has fixed three or four times already, should not require a human out of bed in the middle of the night.</p>
 
-            <p>The goal was never to remove engineers from the picture. It was to stop wasting their time on things that don't need them. API failures are a structural feature of how modern software is built. But the part where figuring out what happened takes longer than fixing it? That's a choice—and one worth changing.</p>
+            <p>The goal was never to remove engineers from the picture. It was to stop wasting their time on things that don't need them. API failures are a structural feature of how modern software is built. But the part where figuring out what happened takes longer than fixing it? That's a choice and one worth changing.</p>
         </article>
 
         <section class="references">
@@ -206,7 +220,7 @@
             <div class="reference-item">
                 <strong>[1] Zhou, L. et al. (2026)</strong> - 
                 <em>"RC-LLM: Root Cause Analysis Using Large Language Models"</em>. 
-                Introduces LLM-based reasoning across logs, metrics, and traces to accurately identify root causes in complex cloud systems. 
+                Introduces LLM-based reasoning across logs, metrics, and traces to accurately identify root causes in complex cloud system. 
                 <br><a href="https://arxiv.org/abs/2602.08804" target="_blank">https://arxiv.org/abs/2602.08804</a>
             </div>
 
@@ -226,7 +240,7 @@
 
             <div class="reference-item">
                 <strong>[4] Google Cloud (2025)</strong> - 
-                <em>"What is AIOps?"</em> 
+                <em>"What is AIOps?"</em>
                 Describes how AI correlates logs, metrics, and traces to identify cause-effect relationships and perform intelligent root cause analysis. 
                 <br><a href="https://cloud.google.com/discover/what-is-aiops" target="_blank">https://cloud.google.com/discover/what-is-aiops</a>
             </div>
@@ -239,7 +253,7 @@
             </div>
             
             <div class="reference-item">
-                <strong>[6] Korf, N.</strong> - 
+                <strong>[6] Kof, N.</strong> - 
                 <em>"Grangersearch Example Dataset"</em>. 
                 <br><a href="https://github.com/nkorf/grangersearch" target="_blank">https://github.com/nkorf/grangersearch</a>
             </div>
@@ -247,7 +261,7 @@
     </div>
 
     <footer>
-        &copy; 2026 Annasaheb Dange College of Engineering and Technology. All rights reserved.
+        AI-Driven RCA of API Failures in Google Cloud
     </footer>
 
 </body>
